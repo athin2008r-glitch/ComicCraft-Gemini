@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ComicCraft generated comic preview">
+  <title>{{ title }} — ComicCraft</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+  <main class="site-shell wide-shell">
+    <header class="preview-header">
+      <div>
+        <p class="eyebrow">YOUR GENERATED COMIC</p>
+        <h1>{{ title }}</h1>
+        {% if text_provider == "gemini" %}
+        <p class="provider-status">Generated with Gemini</p>
+        {% elif text_provider == "openai" %}
+        <p class="provider-status">Gemini unavailable — generated with OpenAI</p>
+        {% elif text_provider == "local-fallback" %}
+        <p class="provider-status">AI providers unavailable — local fallback used</p>
+        {% else %}
+        <p class="provider-status">Text providers: {{ text_provider }}</p>
+        {% endif %}
+      </div>
+      <a class="secondary-button" href="/">Create Another</a>
+    </header>
+
+    <section class="comic-grid">
+      {% for panel in layout %}
+      <article class="panel-card">
+        <div class="panel-topline">
+          <span class="panel-number">{{ "%02d"|format(panel.panel_number) }}</span>
+          <h2>{{ panel.title }}</h2>
+        </div>
+        <img class="panel-image" src="/{{ panel.image_path }}" alt="Panel {{ panel.panel_number }} illustration">
+        {% if panel.image_provider %}
+        <span class="image-provider">AI Image: {{ panel.image_provider }}</span>
+        {% endif %}
+        <p class="scene-description">{{ panel.scene_description }}</p>
+
+        {% if panel.narration %}
+        <div class="story-block narration-block">
+          <span class="block-label">Caption</span>
+          <p>{{ panel.narration }}</p>
+        </div>
+        {% endif %}
+
+        {% if panel.dialogue %}
+        <div class="story-block dialogue-block">
+          <span class="block-label">Dialogue</span>
+          <p>“{{ panel.dialogue }}”</p>
+        </div>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </section>
+
+    <div class="export-bar">
+      <div>
+        <p class="eyebrow">READY TO EXPORT</p>
+        <h2>Compile the five panels into an A4 PDF.</h2>
+      </div>
+      <a class="primary-button" href="/download-pdf?file={{ pdf_path.split('/')[-1] }}">Download Your Comic as PDF</a>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,37 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Python virtual environments
+venv/
+comiccraft-env/
+.venv/
+
+# Python cache
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyc
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE settings
+.vscode/
+.idea/
+
+# Generated comic files
+static/panels/*.png
+static/exports/*.pdf
+
+# Python build/package files
+*.egg-info/
+build/
+dist/
+
+# OS files
+.DS_Store
+Thumbs.db

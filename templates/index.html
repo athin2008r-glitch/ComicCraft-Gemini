@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ComicCraft - create five-panel AI comics">
+  <title>ComicCraft — AI Comic Story Creator</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+  <main class="site-shell">
+    <section class="hero">
+      <div class="brand-mark">CC</div>
+      <p class="eyebrow">GEMINI + AI IMAGE GENERATION</p>
+      <h1>ComicCraft</h1>
+      <p class="hero-copy">Turn a simple idea into a five-panel comic storyboard with narration, dialogue, illustrations, and a downloadable PDF.</p>
+    </section>
+
+    <section class="card form-card">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">CREATE</p>
+          <h2>Your Story</h2>
+        </div>
+        <span class="step-pill">5 panels</span>
+      </div>
+
+      {% if error %}
+      <div class="alert error">{{ error }}</div>
+      {% endif %}
+
+      <form action="/generate" method="post" class="comic-form">
+        <label for="prompt">Story Prompt</label>
+        <textarea id="prompt" name="prompt" rows="5" maxlength="4000" required placeholder="A brave fox exploring an enchanted forest..."></textarea>
+
+        <label for="character_name">Main Character Name</label>
+        <input id="character_name" name="character_name" type="text" maxlength="80" required placeholder="Rox">
+
+        <div class="field-grid">
+          <div>
+            <label for="setting">Setting</label>
+            <select id="setting" name="setting" required>
+              <option value="school">School</option>
+              <option value="forest" selected>Forest</option>
+              <option value="space">Space</option>
+              <option value="city">City</option>
+            </select>
+          </div>
+          <div>
+            <label for="tone">Story Tone</label>
+            <select id="tone" name="tone" required>
+              <option value="funny">Funny</option>
+              <option value="dramatic" selected>Dramatic</option>
+              <option value="light-hearted">Light-hearted</option>
+              <option value="adventurous">Adventurous</option>
+            </select>
+          </div>
+        </div>
+
+        <label for="art_style">Art Style</label>
+        <select id="art_style" name="art_style" required>
+          <option value="anime" selected>Anime</option>
+          <option value="comic book">Comic Book</option>
+          <option value="pixel art">Pixel Art</option>
+          <option value="realistic">Realistic</option>
+        </select>
+
+        <button type="submit" class="primary-button">Create My Comic</button>
+      </form>
+    </section>
+
+    <p class="footer-note">ComicCraft is a local-first capstone application. API keys stay on the server.</p>
+  </main>
+</body>
+</html>
