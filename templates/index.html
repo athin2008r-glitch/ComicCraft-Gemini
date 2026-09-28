@@ -65,11 +65,116 @@
           <option value="realistic">Realistic</option>
         </select>
 
-        <button type="submit" class="primary-button">Create My Comic</button>
+        <button type="submit" class="primary-button">Generate Comic</button>
       </form>
     </section>
 
     <p class="footer-note">ComicCraft is a local-first capstone application. API keys stay on the server.</p>
   </main>
+
+  <div class="generation-overlay" id="generation-overlay" aria-hidden="true">
+    <section class="generation-dialog" role="dialog" aria-modal="true" aria-labelledby="loading-title" aria-describedby="loading-description" tabindex="-1">
+      <p class="eyebrow loading-kicker">THE NEXT GREAT STORY</p>
+      <div class="loading-visual" aria-hidden="true">
+        <span class="impact-star star-one"></span>
+        <span class="impact-star star-two"></span>
+        <div class="mini-comic-page">
+          <div class="mini-panel mini-panel-one">
+            <span class="scene-sun"></span>
+            <span class="scene-horizon"></span>
+            <span class="scene-character"></span>
+            <span class="scene-ground"></span>
+          </div>
+          <div class="mini-panel mini-panel-two">
+            <span class="scene-moon"></span>
+            <span class="scene-cloud scene-cloud-one"></span>
+            <span class="scene-cloud scene-cloud-two"></span>
+            <span class="scene-character scene-character-two"></span>
+          </div>
+          <div class="mini-panel mini-panel-three">
+            <span class="scene-burst"></span>
+            <span class="scene-character scene-character-three"></span>
+            <span class="scene-ground scene-ground-three"></span>
+          </div>
+        </div>
+        <div class="speech-bubble">A new adventure!</div>
+      </div>
+      <div class="loading-copy">
+        <div class="loading-spinner" aria-hidden="true"></div>
+        <h2 id="loading-title">Creating Your Comic...</h2>
+        <p id="loading-description">Your panels are being created. This may take a little while.</p>
+        <p class="generation-status" id="generation-status" aria-live="polite">Planning your story...</p>
+        <div class="progress-track" role="progressbar" aria-label="Comic generation in progress">
+          <span class="progress-indeterminate"></span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    (() => {
+      const form = document.querySelector(".comic-form");
+      const submitButton = form?.querySelector('button[type="submit"]');
+      const overlay = document.getElementById("generation-overlay");
+      const dialog = overlay?.querySelector(".generation-dialog");
+      const status = document.getElementById("generation-status");
+      const app = document.querySelector(".site-shell");
+      if (!form || !submitButton || !overlay || !dialog || !status || !app) return;
+
+      const statusMessages = [
+        "Planning your story...",
+        "Writing the scenes...",
+        "Illustrating your comic...",
+        "Composing the pages...",
+        "Adding the finishing touches...",
+        "Almost ready..."
+      ];
+      const originalButtonText = submitButton.textContent;
+      let submitting = false;
+      let statusIndex = 0;
+      let statusTimer;
+
+      const resetLoadingState = () => {
+        submitting = false;
+        window.clearInterval(statusTimer);
+        overlay.classList.remove("is-visible");
+        overlay.setAttribute("aria-hidden", "true");
+        dialog.setAttribute("aria-busy", "false");
+        app.inert = false;
+        submitButton.disabled = false;
+        submitButton.textContent = originalButtonText;
+        document.body.classList.remove("generation-active");
+      };
+
+      window.addEventListener("pageshow", resetLoadingState);
+
+      form.addEventListener("submit", (event) => {
+        if (submitting) {
+          event.preventDefault();
+          return;
+        }
+
+        submitting = true;
+        submitButton.disabled = true;
+        submitButton.textContent = "Creating...";
+        app.inert = true;
+        dialog.setAttribute("aria-busy", "true");
+        overlay.setAttribute("aria-hidden", "false");
+        document.body.classList.add("generation-active");
+        overlay.classList.add("is-visible");
+        dialog.focus({ preventScroll: true });
+
+        statusIndex = 0;
+        status.textContent = statusMessages[statusIndex];
+        statusTimer = window.setInterval(() => {
+          statusIndex = (statusIndex + 1) % statusMessages.length;
+          status.textContent = statusMessages[statusIndex];
+          status.classList.remove("status-enter");
+          void status.offsetWidth;
+          status.classList.add("status-enter");
+        }, 2800);
+      });
+    })();
+  </script>
 </body>
 </html>
